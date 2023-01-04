@@ -162,6 +162,14 @@ def haymarket_and_leith
   # Give the company and num of the services that connect stops
   # 115 and 137 ('Haymarket' and 'Leith')
   execute(<<-SQL)
+    SELECT DISTINCT
+      start_point.company, start_point.num
+    FROM
+      routes as start_point
+    JOIN
+      routes as end_point ON start_point.company = end_point.company AND start_point.num = end_point.num
+    WHERE
+      start_point.stop_id = 115 AND end_point.stop_id = 137
   SQL
 end
 
@@ -169,6 +177,19 @@ def craiglockhart_and_tollcross
   # Give the company and num of the services that connect stops
   # 'Craiglockhart' and 'Tollcross'
   execute(<<-SQL)
+    SELECT
+      start_point.company,
+      start_point.num
+    FROM
+      routes AS start_point
+    JOIN
+      routes AS end_point ON start_point.company = end_point.company AND start_point.num = end_point.num
+    JOIN
+      stops AS origin_stops ON origin_stops.id = start_point.stop_id
+    JOIN
+      stops AS destination_stops ON destination_stops.id = end_point.stop_id
+    WHERE
+      origin_stops.name = 'Craiglockhart' AND destination_stops.name = 'Tollcross'
   SQL
 end
 
@@ -187,3 +208,10 @@ def craiglockhart_to_sighthill
   execute(<<-SQL)
   SQL
 end
+
+
+# C - Clarify the problem
+# R - Roadmap
+# E - Execute the code
+# P - Prove that it works
+# E - Optimize for Efficiency 
